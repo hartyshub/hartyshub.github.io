@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import EventCard from '@components/EventCard.astro';
+import PageLayout from '@layouts/PageLayout.astro';
+import { compareByDateAsc } from '@lib/site';
+
+const events = (await getCollection('events')).sort(compareByDateAsc);
+const now = new Date();
+const upcoming = events.filter((event) => event.data.date >= now);
+const past = events.filter((event) => event.data.date < now);
+---
+
+<PageLayout
+  title="Events"
+  summary="Upcoming public talks, campus visits, and research presentations, followed by recent event records."
+  eyebrow="Calendar"
+>
+  <section class="section-block">
+    <p class="eyebrow">Upcoming</p>
+    <div class="grid three">
+      {upcoming.map((event) => <EventCard event={event} />)}
+    </div>
+  </section>
+
+  <section class="section-block">
+    <p class="eyebrow">Past events</p>
+    <div class="grid three">
+      {past.map((event) => <EventCard event={event} />)}
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .section-block + .section-block {
+    margin-top: 2rem;
+  }
+</style>

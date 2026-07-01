@@ -1,0 +1,34 @@
+---
+import { getCollection, render } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+
+const research = await getCollection('research');
+---
+
+<PageLayout
+  title="Research"
+  summary="Five anonymized research priorities used to test narrative sections, summaries, and long-form academic content."
+  eyebrow="Innovation"
+>
+  <div class="grid two">
+    {await Promise.all(
+      research.map(async (entry) => {
+        const { Content } = await render(entry);
+
+        return (
+          <article class="card prose">
+            <p class="kicker">Research area</p>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.summary}</p>
+            <div class="meta-row">
+              {entry.data.focusAreas.map((item) => (
+                <span>{item}</span>
+              ))}
+            </div>
+            <Content />
+          </article>
+        );
+      })
+    )}
+  </div>
+</PageLayout>

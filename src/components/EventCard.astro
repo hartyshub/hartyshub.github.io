@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '@lib/site';
+
+interface Props {
+  event: CollectionEntry<'events'>;
+}
+
+const { event } = Astro.props;
+---
+
+<article class="card">
+  <div class="meta-row">
+    <span class="pill">{event.data.category}</span>
+    <span>{formatDate(event.data.date)}</span>
+  </div>
+  <div>
+    <h3>{event.data.title}</h3>
+    <p>{event.data.summary}</p>
+  </div>
+  <div class="meta-row">
+    <span>{event.data.startTime} - {event.data.endTime}</span>
+    <span>{event.data.location}</span>
+  </div>
+  <a class="button-text" href={`/events/${event.id}`}>View event</a>
+</article>
+
+<style>
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-grey-700);
+  }
+</style>

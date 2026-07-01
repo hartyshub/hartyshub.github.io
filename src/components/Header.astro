@@ -1,0 +1,167 @@
+---
+import { getCollection } from 'astro:content';
+import { primaryNavigation, siteName } from '@lib/site';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+const extraPages = (await getCollection('pages', ({ data, id }) => {
+  const path = `/${id}`;
+  return data.showInNavigation && !primaryNavigation.some((item) => item.href === path);
+}))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+  .map((page) => ({
+    href: `/${page.id}`,
+    label: page.data.navigationLabel || page.data.title,
+  }));
+
+const navItems = [...primaryNavigation, ...extraPages];
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>{siteName}</span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-menu-toggle
+    >
+      Menu
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label="Primary">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'nav-link',
+            { active: currentPath === item.href || currentPath.startsWith(`${item.href}/`) },
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const nav = document.querySelector('#site-nav');
+
+  if (toggle instanceof HTMLButtonElement && nav instanceof HTMLElement) {
+    const closeMenu = () => {
+      toggle.setAttribute('aria-expanded', 'false');
+      nav.dataset.open = 'false';
+    };
+
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      nav.dataset.open = String(!expanded);
+    });
+
+    nav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(31, 32, 35, 0.08);
+    backdrop-filter: blur(18px);
+    background: rgba(255, 255, 255, 0.84);
+  }
+
+  .header-inner {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    gap: 1rem;
+    min-height: 4.75rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    font-weight: 700;
+    color: var(--color-black);
+  }
+
+  .brand-mark {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 30%, var(--color-orange), transparent 45%),
+      linear-gradient(135deg, var(--color-crimson), var(--color-orange-dark));
+    box-shadow: 0 0 0 6px rgba(181, 18, 43, 0.08);
+  }
+
+  .menu-toggle {
+    justify-self: end;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(31, 32, 35, 0.12);
+    background: var(--color-white);
+  }
+
+  .site-nav {
+    grid-column: 1 / -1;
+    display: none;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-bottom: 1rem;
+  }
+
+  .site-nav[data-open='true'] {
+    display: flex;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    color: var(--color-grey-700);
+    font-weight: 600;
+  }
+
+  .nav-link.active,
+  .nav-link:hover {
+    color: var(--color-crimson-dark);
+  }
+
+  @media (min-width: 1024px) {
+    .header-inner {
+      grid-template-columns: auto 1fr;
+    }
+
+    .menu-toggle {
+      display: none;
+    }
+
+    .site-nav {
+      display: flex;
+      grid-column: auto;
+      flex-direction: row;
+      justify-content: end;
+      flex-wrap: wrap;
+      padding-bottom: 0;
+      gap: 1.2rem;
+    }
+  }
+</style>

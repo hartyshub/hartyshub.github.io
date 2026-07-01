@@ -1,0 +1,70 @@
+---
+import { siteDescription, siteName } from '@lib/site';
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <p class="eyebrow">Mock academic site</p>
+      <h2>{siteName}</h2>
+      <p>{siteDescription}</p>
+    </div>
+
+    <div class="footer-links">
+      <a href="/programs">Programs</a>
+      <a href="/admissions">Admissions</a>
+      <a href="/research">Research</a>
+      <a href="/student-life">Student Life</a>
+      <a href="/visit">Visit</a>
+      <a href="/policies">Policies</a>
+    </div>
+
+    <div class="footer-contact">
+      <p class="kicker">Mock contact</p>
+      <a href="mailto:hello@harty.example">hello@harty.example</a>
+      <p>Bangkok Innovation District, Thailand</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: 3rem 0;
+    border-top: 1px solid rgba(31, 32, 35, 0.08);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .footer-brand h2 {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-size: 2rem;
+  }
+
+  .footer-brand p:last-child,
+  .footer-contact p:last-child {
+    margin: 0;
+    color: var(--color-grey-700);
+  }
+
+  .footer-links {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .footer-links a,
+  .footer-contact a {
+    font-weight: 600;
+  }
+
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1.5fr 1fr 1fr;
+      align-items: start;
+    }
+  }
+</style>

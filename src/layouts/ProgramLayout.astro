@@ -1,0 +1,64 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ResponsiveImage from '@components/ResponsiveImage.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title: string;
+  summary: string;
+  degreeLevel: string;
+  duration: string;
+  intake: string;
+  location: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+}
+
+const { title, summary, degreeLevel, duration, intake, location, image, imageAlt = '' } = Astro.props;
+---
+
+<BaseLayout title={title} description={summary}>
+  <section class="section">
+    <div class="container grid two">
+      <div class="hero-copy">
+        <p class="eyebrow">{degreeLevel}</p>
+        <h1 class="headline">{title}</h1>
+        <p class="section-copy">{summary}</p>
+        <div class="hero-actions">
+          <a class="button" href="/admissions">Apply to Harty</a>
+          <a class="button-secondary" href="/programs">All programs</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-showcase">
+          <ResponsiveImage src={image} alt={imageAlt} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid two">
+      <aside class="card">
+        <dl class="detail-list">
+          <div class="detail-row">
+            <dt>Duration</dt>
+            <dd>{duration}</dd>
+          </div>
+          <div class="detail-row">
+            <dt>Intake</dt>
+            <dd>{intake}</dd>
+          </div>
+          <div class="detail-row">
+            <dt>Location</dt>
+            <dd>{location}</dd>
+          </div>
+        </dl>
+      </aside>
+
+      <div class="prose">
+        <slot />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

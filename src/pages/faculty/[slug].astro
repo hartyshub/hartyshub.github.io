@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '@layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const faculty = await getCollection('faculty');
+  return faculty.map((person) => ({
+    params: { slug: person.id },
+    props: { person },
+  }));
+}
+
+const { person } = Astro.props;
+const { Content } = await render(person);
+---
+
+<ArticleLayout
+  title={person.data.name}
+  summary={person.data.shortBio}
+  eyebrow={person.data.title}
+  metadata={[person.data.department, ...person.data.programs.slice(0, 2)]}
+  image={person.data.portrait}
+  imageAlt={person.data.portraitAlt || ''}
+>
+  <h2>Research areas</h2>
+  <ul>
+    {person.data.researchAreas.map((item: string) => <li>{item}</li>)}
+  </ul>
+
+  <h2>Programs</h2>
+  <ul>
+    {person.data.programs.map((item: string) => <li>{item}</li>)}
+  </ul>
+
+  <Content />
+</ArticleLayout>

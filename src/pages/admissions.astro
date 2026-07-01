@@ -1,0 +1,43 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { admissionsSteps } from '@lib/site';
+---
+
+<PageLayout
+  title="Admissions"
+  summary="A clear admissions flow with sample costs, program requirements, and direct next-step calls to action."
+  eyebrow="Apply"
+>
+  <h2>Application steps</h2>
+  <ol>
+    {admissionsSteps.map((step) => <li>{step}</li>)}
+  </ol>
+
+  <h2>Requirements overview</h2>
+  <ul>
+    <li>Academic transcripts or current study records.</li>
+    <li>English proficiency evidence for internationally delivered coursework.</li>
+    <li>Statement of interest aligned to the selected pathway.</li>
+    <li>Portfolio or interview for programs with a creative or project-heavy emphasis.</li>
+  </ul>
+
+  <h2>Sample admissions costs</h2>
+  <p>
+    This mockup intentionally uses sample values for application and enrollment costs. These
+    numbers exist to test layout, not to represent a real institution policy.
+  </p>
+  <ul>
+    <li>Sample application fee: THB 1,500</li>
+    <li>Sample enrollment confirmation deposit: THB 10,000</li>
+  </ul>
+
+  <h2>FAQ</h2>
+  <p>
+    The admissions page is designed to answer the first set of questions directly on phones and
+    tablets: what to submit, when to submit it, what costs are shown, and what happens next.
+  </p>
+
+  <p>
+    <a class="button" href="/programs">Compare programs</a>
+  </p>
+</PageLayout>

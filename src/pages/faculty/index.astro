@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import FacultyCard from '@components/FacultyCard.astro';
+import PageLayout from '@layouts/PageLayout.astro';
+import { compareFaculty } from '@lib/site';
+
+const faculty = (await getCollection('faculty')).sort(compareFaculty);
+---
+
+<PageLayout
+  title="Faculty"
+  summary="Fictional faculty entries used to demonstrate scalable directory and profile patterns."
+  eyebrow="People"
+>
+  <div class="grid three">
+    {faculty.map((person) => <FacultyCard faculty={person} />)}
+  </div>
+</PageLayout>

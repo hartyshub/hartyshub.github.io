@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import ProgramCard from '@components/ProgramCard.astro';
+import PageLayout from '@layouts/PageLayout.astro';
+import { groupPrograms } from '@lib/site';
+
+const programs = await getCollection('programs');
+const groupedPrograms = groupPrograms(programs);
+---
+
+<PageLayout
+  title="Programs"
+  summary="Browse undergraduate, graduate, doctoral, pre-college, and professional pathways."
+  eyebrow="Academics"
+>
+  {groupedPrograms.map((group) => (
+    <section class="program-group">
+      <div class="section-header">
+        <p class="eyebrow">{group.label}</p>
+        <h2 class="section-title">{group.label} programs</h2>
+      </div>
+      <div class="grid three">
+        {group.items.map((program) => <ProgramCard program={program} />)}
+      </div>
+    </section>
+  ))}
+</PageLayout>
+
+<style>
+  .program-group + .program-group {
+    margin-top: 3rem;
+  }
+</style>

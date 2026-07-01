@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '@layouts/ArticleLayout.astro';
+import { formatDate } from '@lib/site';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((event) => ({
+    params: { slug: event.id },
+    props: { event },
+  }));
+}
+
+const { event } = Astro.props;
+const { Content } = await render(event);
+---
+
+<ArticleLayout
+  title={event.data.title}
+  summary={event.data.summary}
+  eyebrow={event.data.category}
+  metadata={[
+    formatDate(event.data.date),
+    `${event.data.startTime} - ${event.data.endTime}`,
+    event.data.location,
+  ]}
+>
+  <Content />
+
+  {event.data.registrationHref && (
+    <p>
+      <a class="button" href={event.data.registrationHref}>Register interest</a>
+    </p>
+  )}
+</ArticleLayout>

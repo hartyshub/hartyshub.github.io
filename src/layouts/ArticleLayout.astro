@@ -1,0 +1,57 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ResponsiveImage from '@components/ResponsiveImage.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title: string;
+  summary: string;
+  eyebrow: string;
+  metadata: string[];
+  image?: ImageMetadata;
+  imageAlt?: string;
+  description?: string;
+}
+
+const {
+  title,
+  summary,
+  eyebrow,
+  metadata,
+  image,
+  imageAlt = '',
+  description = summary,
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="section">
+    <div class="container grid two article-intro">
+      <div class="hero-copy">
+        <p class="eyebrow">{eyebrow}</p>
+        <h1 class="section-title">{title}</h1>
+        <p class="section-copy">{summary}</p>
+        <div class="meta-row">
+          {metadata.map((item) => <span>{item}</span>)}
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-showcase">
+          <ResponsiveImage src={image} alt={imageAlt} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <slot />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .article-intro {
+    align-items: start;
+  }
+</style>

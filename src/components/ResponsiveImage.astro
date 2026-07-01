@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src?: ImageMetadata;
+  alt?: string;
+  aspect?: 'landscape' | 'square' | 'wide';
+  className?: string;
+}
+
+const {
+  src,
+  alt = '',
+  aspect = 'landscape',
+  className = '',
+} = Astro.props;
+
+const fallbackClass =
+  aspect === 'square'
+    ? 'visual-block square'
+    : aspect === 'wide'
+      ? 'visual-block wide'
+      : 'visual-block';
+
+const imageClass =
+  aspect === 'square'
+    ? 'media square'
+    : aspect === 'wide'
+      ? 'media wide'
+      : 'media';
+---
+
+{
+  src ? (
+    <Image
+      src={src}
+      alt={alt}
+      class={`${imageClass} ${className}`}
+      widths={[400, 800, 1200]}
+      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+    />
+  ) : (
+    <div class={`${fallbackClass} ${className}`} aria-hidden="true" />
+  )
+}
+
+<style>
+  .media {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: calc(var(--radius-card) - 2px);
+  }
+
+  .media.square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .media.wide {
+    aspect-ratio: 16 / 10;
+  }
+</style>

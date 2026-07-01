@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ResponsiveImage from './ResponsiveImage.astro';
+
+interface Props {
+  program: CollectionEntry<'programs'>;
+}
+
+const { program } = Astro.props;
+---
+
+<article class="card">
+  <ResponsiveImage src={program.data.heroImage} alt={program.data.heroImageAlt || ''} />
+  <div class="meta-row">
+    <span class="pill">{program.data.degreeLevel}</span>
+    <span>{program.data.intake}</span>
+  </div>
+  <div>
+    <h3>{program.data.name}</h3>
+    <p>{program.data.overview}</p>
+  </div>
+  <div class="meta-row">
+    <span>{program.data.duration}</span>
+    <span>{program.data.location}</span>
+  </div>
+  <a class="button-text" href={`/programs/${program.id}`}>View program</a>
+</article>
+
+<style>
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-grey-700);
+  }
+</style>

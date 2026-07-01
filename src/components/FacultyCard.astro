@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ResponsiveImage from './ResponsiveImage.astro';
+
+interface Props {
+  faculty: CollectionEntry<'faculty'>;
+}
+
+const { faculty } = Astro.props;
+---
+
+<article class="card">
+  <ResponsiveImage
+    src={faculty.data.portrait}
+    alt={faculty.data.portraitAlt || ''}
+    aspect="square"
+  />
+  <div>
+    <h3>{faculty.data.name}</h3>
+    <p class="role">{faculty.data.title}</p>
+    <p>{faculty.data.shortBio}</p>
+  </div>
+  <div class="meta-row">
+    <span>{faculty.data.department}</span>
+  </div>
+  <a class="button-text" href={`/faculty/${faculty.id}`}>View profile</a>
+</article>
+
+<style>
+  h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .role {
+    margin: 0 0 0.75rem;
+    color: var(--color-crimson-dark);
+    font-weight: 700;
+  }
+
+  p:last-child {
+    margin: 0;
+    color: var(--color-grey-700);
+  }
+</style>

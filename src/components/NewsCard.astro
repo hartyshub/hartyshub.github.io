@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '@lib/site';
+import ResponsiveImage from './ResponsiveImage.astro';
+
+interface Props {
+  article: CollectionEntry<'news'>;
+}
+
+const { article } = Astro.props;
+---
+
+<article class="card">
+  <ResponsiveImage src={article.data.heroImage} alt={article.data.heroImageAlt || ''} />
+  <div class="meta-row">
+    <span class="kicker">{article.data.category}</span>
+    <span>{formatDate(article.data.date)}</span>
+  </div>
+  <div>
+    <h3>{article.data.title}</h3>
+    <p>{article.data.summary}</p>
+  </div>
+  <a class="button-text" href={`/news/${article.id}`}>Read story</a>
+</article>
+
+<style>
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-grey-700);
+  }
+</style>

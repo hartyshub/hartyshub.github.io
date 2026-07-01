@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import NewsCard from '@components/NewsCard.astro';
+import PageLayout from '@layouts/PageLayout.astro';
+import { compareByDateDesc } from '@lib/site';
+
+const articles = (await getCollection('news')).sort(compareByDateDesc);
+const [featuredArticle, ...otherArticles] = articles;
+---
+
+<PageLayout
+  title="News"
+  summary="An anonymized editorial stream with featured stories, applied research updates, and student activity."
+  eyebrow="Editorial"
+>
+  {featuredArticle && (
+    <section class="section-block">
+      <p class="eyebrow">Featured story</p>
+      <article class="card">
+        <div>
+          <p class="kicker">{featuredArticle.data.category}</p>
+          <h2>{featuredArticle.data.title}</h2>
+          <p>{featuredArticle.data.summary}</p>
+        </div>
+        <a class="button-text" href={`/news/${featuredArticle.id}`}>Read featured story</a>
+      </article>
+    </section>
+  )}
+
+  <section class="section-block">
+    <p class="eyebrow">Latest stories</p>
+    <div class="grid three">
+      {otherArticles.map((article) => <NewsCard article={article} />)}
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .section-block + .section-block {
+    margin-top: 2rem;
+  }
+
+  h2 {
+    margin: 0 0 0.6rem;
+    font-size: 1.6rem;
+    line-height: 1.15;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+</style>

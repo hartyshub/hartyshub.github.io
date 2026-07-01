@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from 'astro:content';
+import ProgramLayout from '@layouts/ProgramLayout.astro';
+
+export async function getStaticPaths() {
+  const programs = await getCollection('programs');
+  return programs.map((program) => ({
+    params: { slug: program.id },
+    props: { program },
+  }));
+}
+
+const { program } = Astro.props;
+const { Content } = await render(program);
+---
+
+<ProgramLayout
+  title={program.data.name}
+  summary={program.data.overview}
+  degreeLevel={program.data.degreeLevel}
+  duration={program.data.duration}
+  intake={program.data.intake}
+  location={program.data.location}
+  image={program.data.heroImage}
+  imageAlt={program.data.heroImageAlt || ''}
+>
+  <h2>Curriculum highlights</h2>
+  <ul>
+    {program.data.curriculumHighlights.map((item: string) => <li>{item}</li>)}
+  </ul>
+
+  <h2>Outcomes</h2>
+  <ul>
+    {program.data.outcomes.map((item: string) => <li>{item}</li>)}
+  </ul>
+
+  <h2>Requirements</h2>
+  <ul>
+    {program.data.requirements.map((item: string) => <li>{item}</li>)}
+  </ul>
+
+  <Content />
+</ProgramLayout>

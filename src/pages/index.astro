@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import EventCard from '@components/EventCard.astro';
+import FacultyCard from '@components/FacultyCard.astro';
+import Hero from '@components/Hero.astro';
+import NewsCard from '@components/NewsCard.astro';
+import ProgramCard from '@components/ProgramCard.astro';
+import { compareByDateAsc, compareByDateDesc, compareFaculty } from '@lib/site';
+
+const programs = await getCollection('programs');
+const news = (await getCollection('news')).sort(compareByDateDesc);
+const events = (await getCollection('events')).sort(compareByDateAsc);
+const faculty = (await getCollection('faculty')).sort(compareFaculty);
+const research = await getCollection('research');
+
+const featuredPrograms = programs.filter((program) => program.data.featured);
+const featuredNews = news.filter((article) => article.data.featured).slice(0, 3);
+const upcomingEvents = events.filter((event) => event.data.date >= new Date()).slice(0, 3);
+const featuredFaculty = faculty.filter((person) => person.data.featured).slice(0, 3);
+const featuredResearch = research.filter((entry) => entry.data.featured).slice(0, 3);
+---
+
+<BaseLayout>
+  <Hero featuredPrograms={featuredPrograms.length ? featuredPrograms : programs.slice(0, 3)} />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Academic programs</p>
+        <h2 class="section-title">Structured pathways for applied AI, systems, and design.</h2>
+        <p class="section-copy">
+          The mockup keeps the academic structure visible from the first scroll: degree level,
+          intake timing, and program summaries stay readable on phones, tablets, and desktops.
+        </p>
+      </div>
+
+      <div class="grid three">
+        {programs.slice(0, 6).map((program) => <ProgramCard program={program} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface-dark">
+    <div class="container grid two">
+      <div class="section-header">
+        <p class="eyebrow">Admissions</p>
+        <h2 class="section-title">Clear application flow for prospective students.</h2>
+        <p class="section-copy">
+          Requirements, deadlines, and sample cost information are grouped into a single page so
+          the primary task on mobile is deciding what to do next, not where to click next.
+        </p>
+        <a class="button-secondary" href="/admissions">Review admissions</a>
+      </div>
+
+      <div class="card">
+        <p class="kicker">This mockup includes</p>
+        <div class="detail-list">
+          <div class="detail-row">
+            <dt>Step-by-step flow</dt>
+            <dd>Account, materials, review, interview, and confirmation stages.</dd>
+          </div>
+          <div class="detail-row">
+            <dt>Program-specific requirements</dt>
+            <dd>Academic documents, English proficiency, and portfolio or interview notes.</dd>
+          </div>
+          <div class="detail-row">
+            <dt>Sample costs</dt>
+            <dd>Explicitly marked as mock values so the redesign is not mistaken for policy.</dd>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Research and innovation</p>
+        <h2 class="section-title">Five priorities that signal where the institution is headed.</h2>
+      </div>
+
+      <div class="grid three">
+        {featuredResearch.map((entry) => (
+          <article class="card">
+            <p class="kicker">Research area</p>
+            <h3>{entry.data.title}</h3>
+            <p>{entry.data.summary}</p>
+            <div class="meta-row">
+              {entry.data.focusAreas.slice(0, 2).map((item) => <span>{item}</span>)}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Latest news</p>
+        <h2 class="section-title">Editorial structure that still reads cleanly on small screens.</h2>
+      </div>
+
+      <div class="grid three">
+        {featuredNews.map((article) => <NewsCard article={article} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Upcoming events</p>
+        <h2 class="section-title">Open houses, lectures, and applied research sessions.</h2>
+      </div>
+
+      <div class="grid three">
+        {upcomingEvents.map((event) => <EventCard event={event} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Faculty preview</p>
+        <h2 class="section-title">Fictional profiles used to test the profile and directory layouts.</h2>
+      </div>
+
+      <div class="grid three">
+        {featuredFaculty.map((person) => <FacultyCard faculty={person} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
