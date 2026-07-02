@@ -1,17 +1,22 @@
 ---
 import { getCollection } from 'astro:content';
 import NewsCard from '@components/NewsCard.astro';
+import Pagination from '@components/Pagination.astro';
 import PageLayout from '@layouts/PageLayout.astro';
 import { compareByDateDesc } from '@lib/site';
 
+const PAGE_SIZE = 12;
 const articles = (await getCollection('news')).sort(compareByDateDesc);
-const [featuredArticle, ...otherArticles] = articles;
+const [featuredArticle, ...archiveArticles] = articles;
+const pagedArticles = archiveArticles.slice(0, PAGE_SIZE);
+const totalPages = Math.max(1, Math.ceil(archiveArticles.length / PAGE_SIZE));
 ---
 
 <PageLayout
   title="News"
   summary="An anonymized editorial stream with featured stories, applied research updates, and student activity."
   eyebrow="Editorial"
+  contentWidth="wide"
 >
   {featuredArticle && (
     <section class="section-block">
@@ -28,10 +33,16 @@ const [featuredArticle, ...otherArticles] = articles;
   )}
 
   <section class="section-block">
-    <p class="eyebrow">Latest stories</p>
-    <div class="grid three">
-      {otherArticles.map((article) => <NewsCard article={article} />)}
+    <div class="archive-heading">
+      <p class="eyebrow">Latest stories</p>
+      <p class="archive-count">
+        Showing {pagedArticles.length} of {archiveArticles.length} archive stories
+      </p>
     </div>
+    <div class="grid three">
+      {pagedArticles.map((article) => <NewsCard article={article} />)}
+    </div>
+    <Pagination currentPage={1} totalPages={totalPages} basePath="/news" />
   </section>
 </PageLayout>
 
@@ -48,5 +59,24 @@ const [featuredArticle, ...otherArticles] = articles;
 
   p:last-child {
     margin-bottom: 0;
+  }
+
+  .archive-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .archive-heading .eyebrow,
+  .archive-count {
+    margin: 0;
+  }
+
+  .archive-count {
+    color: var(--color-grey-700);
+    font-weight: 700;
   }
 </style>

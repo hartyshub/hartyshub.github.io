@@ -10,6 +10,7 @@ interface Props {
   image?: ImageMetadata;
   imageAlt?: string;
   description?: string;
+  contentWidth?: 'prose' | 'wide';
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   image,
   imageAlt = '',
   description = summary,
+  contentWidth = 'prose',
 } = Astro.props;
 ---
 
@@ -39,7 +41,7 @@ const {
   </section>
 
   <section class="section">
-    <div class="container prose">
+    <div class:list={['container', contentWidth === 'prose' ? 'prose' : 'page-content-wide']}>
       <slot />
     </div>
   </section>

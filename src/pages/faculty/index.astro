@@ -11,6 +11,7 @@ const faculty = (await getCollection('faculty')).sort(compareFaculty);
   title="Faculty"
   summary="Fictional faculty entries used to demonstrate scalable directory and profile patterns."
   eyebrow="People"
+  contentWidth="wide"
 >
   <div class="grid three">
     {faculty.map((person) => <FacultyCard faculty={person} />)}

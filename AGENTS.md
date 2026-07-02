@@ -17,6 +17,9 @@ This project is a redesign mockup derived from the structure of `www.cmkl.ac.th`
 - Keystatic is configured for local editing only.
 - Local Keystatic works at `/keystatic` in dev mode.
 - A dev-only hydration fix is in place for `react-dom/client`.
+- Structural listing pages use a wide `PageLayout` mode so desktop cards are not constrained to prose width.
+- The news archive is statically paginated: `/news` is page 1 and older archive pages live at `/news/page/{page}`.
+- A deliberate stress-test batch of 100 synthetic news entries exists at `src/content/news/stress-test-news-001.mdoc` through `src/content/news/stress-test-news-100.mdoc`.
 
 ## Non-Negotiable Rules
 
@@ -49,6 +52,10 @@ Astro is pinned to `6.4.8` because `@keystatic/astro@5.1.0` is tied to Astro 6 c
   - editor collections and local storage mode
 - [src/content.config.ts](C:/Users/demo/Desktop/Projects/hartyshub.github.io/src/content.config.ts)
   - Astro content schemas
+- [src/components/Pagination.astro](C:/Users/demo/Desktop/Projects/hartyshub.github.io/src/components/Pagination.astro)
+  - shared static pagination control, currently used by the news archive
+- [src/pages/news/page/[page].astro](C:/Users/demo/Desktop/Projects/hartyshub.github.io/src/pages/news/page/[page].astro)
+  - static paginated news archive route
 - [src/shims/react-dom-client.js](C:/Users/demo/Desktop/Projects/hartyshub.github.io/src/shims/react-dom-client.js)
   - dev shim for Keystatic hydration
 - [.github/workflows/pages.yml](C:/Users/demo/Desktop/Projects/hartyshub.github.io/.github/workflows/pages.yml)
@@ -66,6 +73,13 @@ Primary editable collections:
 - `research`
 
 Content lives under `src/content/...` and long-form entries are stored as `.mdoc`.
+
+News archive behavior:
+
+- `/news` shows the featured story plus the first 12 archive stories.
+- `/news/page/{page}` shows older archive stories in batches of 12.
+- Individual news articles still build as `/news/{slug}/`.
+- Synthetic stress-test articles are intentionally anonymized and marked with `Stress Test` and `Synthetic` tags.
 
 ## Keystatic Workflow
 

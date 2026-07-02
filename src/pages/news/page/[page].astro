@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import NewsCard from '@components/NewsCard.astro';
+import Pagination from '@components/Pagination.astro';
+import PageLayout from '@layouts/PageLayout.astro';
+import { compareByDateDesc } from '@lib/site';
+
+export async function getStaticPaths() {
+  const pageSize = 12;
+  const articles = (await getCollection('news')).sort(compareByDateDesc);
+  const archiveArticles = articles.slice(1);
+  const totalPages = Math.max(1, Math.ceil(archiveArticles.length / pageSize));
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => {
+    const currentPage = index + 2;
+    const start = (currentPage - 1) * pageSize;
+
+    return {
+      params: { page: String(currentPage) },
+      props: {
+        currentPage,
+        totalPages,
+        articles: archiveArticles.slice(start, start + pageSize),
+        totalArticles: archiveArticles.length,
+      },
+    };
+  });
+}
+
+const { articles, currentPage, totalPages, totalArticles } = Astro.props;
+---
+
+<PageLayout
+  title={`News Archive Page ${currentPage}`}
+  summary="Older anonymized editorial updates from the Harty College mock news archive."
+  eyebrow="Editorial"
+  contentWidth="wide"
+>
+  <section class="section-block">
+    <div class="archive-heading">
+      <p class="eyebrow">Archive stories</p>
+      <p class="archive-count">
+        Page {currentPage} of {totalPages}, showing {articles.length} of {totalArticles} stories
+      </p>
+    </div>
+    <div class="grid three">
+      {articles.map((article) => <NewsCard article={article} />)}
+    </div>
+    <Pagination currentPage={currentPage} totalPages={totalPages} basePath="/news" />
+  </section>
+</PageLayout>
+
+<style>
+  .archive-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .archive-heading .eyebrow,
+  .archive-count {
+    margin: 0;
+  }
+
+  .archive-count {
+    color: var(--color-grey-700);
+    font-weight: 700;
+  }
+</style>
